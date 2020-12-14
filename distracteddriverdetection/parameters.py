@@ -1,4 +1,5 @@
 """
+@AmineHorseman
 Sep, 1st, 2016
 """
 import os
@@ -6,11 +7,11 @@ import os
 class Dataset:
     # name = 'Fer2013Fer2013'
     name = 'SSS'
-    train_folder = './driver_feature_hogSecond2.5/train0.75'
+    train_folder = './driver_feature_hogSecond_AUC/train'
     # train_folder = './driver_feature_small/train'
-    validation_folder = './driver_feature_hogSecond2.5/test0.75'
+    validation_folder = 'driver_feature_hogSecond_AUC/test'
     # validation_folder = 'driver_feature_small/test'
-    test_folder = './driver_feature_hogSecond2.5/test0.75'
+    test_folder = 'driver_feature_hogSecond_AUC/test'
     # test_folder = 'driver_feature_small/test'
     shape_predictor_path='shape_predictor_68_face_landmarks.dat/shape_predictor_68_face_lndmarks.dat'
     # trunc_trainset_to = 50000  # put the number of train images to use (-1 = all images of the train set)
@@ -42,27 +43,23 @@ class Hyperparams:
 
     keep_prob = 0.001  # dropout = 1 - keep_prob
     # keep_prob = 0.04814844038206214  # dropout = 1 - keep_prob
-    learning_rate = 0.078
-    # learning_rate = 0.06
-    learning_rate_decay = 0.9886303756
+    # learning_rate = 0.06048440
+    learning_rate_decay = 0.9875477015742757
     decay_step = 50
     optimizer = 'momentum'  # {'momentum', 'adam', 'rmsprop', 'adagrad', 'adadelta'}
     # optimizer_param = 0.633264271169259  # momentum value for Momentum optimizer, or beta1 value for Adam
     optimizer_param = 0.65  # momentum value for Momentum optimizer, or beta1 value for Adam
-
-
-
     # keep_prob = 0.8117731896183599  # dropout = 1 - keep_prob
-    # learning_rate = 0.03786456902380755
+    learning_rate = 0.078
     # learning_rate_decay = 0.9886235518723528
     # decay_step = 50
     # optimizer = 'momentum'  # {'momentum', 'adam', 'rmsprop', 'adagrad', 'adadelta'}
     # optimizer_param = 0.6695905203885134
 class Training:
 
-    batch_size =128
-    epochs =200
-    snapshot_step =8000000
+    batch_size =32
+    epochs =1000
+    snapshot_step =800000000000000
     vizualize = True
     logs_dir = "logs"
     checkpoint_dir = "checkpoints/chk"
@@ -81,7 +78,7 @@ class VideoPredictor:
     time_to_wait_between_predictions = 0.5
 
 class OptimizerSearchSpace:
-    learning_rate = {'min': 0.05, 'max': 0.07}
+    learning_rate = {'min': 0.058, 'max': 0.08}
     learning_rate_decay = {'min': 0.95, 'max': 0.99}
     optimizer = ['momentum']   # ['momentum', 'adam', 'rmsprop', 'adagrad', 'adadelta']
     # optimizer = ['momentum', 'adam', 'rmsprop', 'adagrad', 'adadelta']

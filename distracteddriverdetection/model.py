@@ -323,6 +323,7 @@ def build_modelB(optimizer=HYPERPARAMS.optimizer, optimizer_param=HYPERPARAMS.op
 def build_modelA(optimizer=HYPERPARAMS.optimizer, optimizer_param=HYPERPARAMS.optimizer_param,
                  learning_rate=HYPERPARAMS.learning_rate, keep_prob=HYPERPARAMS.keep_prob,
                  learning_rate_decay=HYPERPARAMS.learning_rate_decay, decay_step=HYPERPARAMS.decay_step):
+
     img_prep = tflearn.ImagePreprocessing()
     img_prep.add_featurewise_zero_center()
     img_prep.add_image_normalization()
@@ -330,52 +331,75 @@ def build_modelA(optimizer=HYPERPARAMS.optimizer, optimizer_param=HYPERPARAMS.op
     img_aug = tflearn.ImageAugmentation()
 
     # img_aug.add_random_flip_leftright()
-    # img_aug.add_random_rotation(max_angle=10.0)
+
+    # img_aug.add_random_rotation(max_angle=5.0)
     # img_aug.add_random_blur(sigma_max=3.)
-    # data_preprocessing
-    #     img_aug.add_random_crop([224, 224],8)
-    images_network = input_data(shape=(NETWORK.input_size, NETWORK.input_size1, 1),
-                                data_augmentation=img_aug, data_preprocessing=img_prep, name='input1')
-
-
-    images_network = conv_2d(images_network, 32, 12, regularizer="L2",weights_init='truncated_normal', activation=NETWORK.activation)
-    if NETWORK.use_batchnorm_after_conv_layers:
-        images_network = batch_normalization(images_network)
-    images_network = max_pool_2d(images_network, 2, strides = 2)
-    # images_network = dropout(images_network, keep_prob=0.9)
     #
-    images_network = conv_2d(images_network, 64, 9, regularizer="L2",weights_init='truncated_normal',activation=NETWORK.activation)
+    # img_aug.add_random_crop([224, 224], padding=4)
+    images_network = input_data(shape=(NETWORK.input_size, NETWORK.input_size1,1),
+                                data_augmentation=img_aug ,data_preprocessing=img_prep,name='input1')
+
+
+    images_network = conv_2d(images_network, 32,3, padding="same", regularizer="L2", weights_init='truncated_normal',activation=NETWORK.activation)
     if NETWORK.use_batchnorm_after_conv_layers:
         images_network = batch_normalization(images_network)
-    images_network = max_pool_2d(images_network, 2, strides = 2)
-    # images_network = dropout(images_network, keep_prob=0.8)
+    images_network = max_pool_2d(images_network, 2, strides=2)
 
-    images_network = conv_2d(images_network, 128, 6,regularizer="L2",weights_init='truncated_normal', activation=NETWORK.activation)
+    #
+    images_network = conv_2d(images_network, 64, 6, padding="same", regularizer="L2", weights_init='truncated_normal',activation=NETWORK.activation)
     if NETWORK.use_batchnorm_after_conv_layers:
         images_network = batch_normalization(images_network)
-    images_network = max_pool_2d(images_network, 2, strides = 2)
-    # images_network = dropout(images_network, keep_prob=0.7)
-
-
-    images_network = conv_2d(images_network, 256, 3,regularizer="L2",weights_init='truncated_normal', activation=NETWORK.activation)
+    images_network = max_pool_2d(images_network, 2, strides=2)
+    #
+    images_network = conv_2d(images_network, 128, 9, padding="same", regularizer="L2", weights_init='truncated_normal',activation=NETWORK.activation)
     if NETWORK.use_batchnorm_after_conv_layers:
         images_network = batch_normalization(images_network)
-    images_network = max_pool_2d(images_network, 2, strides = 2)
-    images_network = dropout(images_network, keep_prob=0.5)
-
+    images_network = max_pool_2d(images_network, 2, strides=2)
+    # #
+    images_network = conv_2d(images_network, 256, 12, padding="same", regularizer="L2", weights_init='truncated_normal',activation=NETWORK.activation)
+    if NETWORK.use_batchnorm_after_conv_layers:
+        images_network = batch_normalization(images_network)
+    images_network = max_pool_2d(images_network, 2, strides=2)
+    #
+    # images_network = conv_2d(images_network, 256, 11, padding="same", regularizer="L2", weights_init='truncated_normal', activation=NETWORK.activation)
+    # if NETWORK.use_batchnorm_after_conv_layers:
+    #     images_network = batch_normalization(images_network)
+    # # # #
+    # # # # #
+    # images_network = conv_2d(images_network, 256, 13, padding="same", regularizer="L2", weights_init='truncated_normal', activation=NETWORK.activation)
+    # if NETWORK.use_batchnorm_after_conv_layers:
+    #     images_network = batch_normalization(images_network)
+    # # # images_network = max_pool_2d(images_network, 2, strides=2)
+    # #
+    # images_network = conv_2d(images_network, 256, 15, padding="same", regularizer="L2", weights_init='truncated_normal', activation=NETWORK.activation)
+    # if NETWORK.use_batchnorm_after_conv_layers:
+    #     images_network = batch_normalization(images_network)
+    # # # #
+    # images_network = conv_2d(images_network, 256, 17, padding="same", regularizer="L2", weights_init='truncated_normal',
+    #                          activation=NETWORK.activation)
+    # if NETWORK.use_batchnorm_after_conv_layers:
+    #     images_network = batch_normalization(images_network)
+    # images_network = conv_2d(images_network, 256, 3, padding="same", regularizer="L2", weights_init='truncated_normal',
+    #                          activation=NETWORK.activation)
+    # if NETWORK.use_batchnorm_after_conv_layers:
+    #     images_network = batch_normalization(images_network)
 
     images_network = global_avg_pool(images_network)
-    if NETWORK.use_batchnorm_after_conv_layers:
+    images_network = dropout(images_network, keep_prob=0.5)
+    if NETWORK.use_batchnorm_after_fully_connected_layers:
         images_network = batch_normalization(images_network)
+
+    # images_network = global_avg_pool(images_network)
+    # if NETWORK.use_batchnorm_after_conv_layers:
+    #     images_network = batch_normalization(images_network)
     # images_network = fully_connected(images_network, 4096, activation=NETWORK.activation)
-    # images_network = dropout(images_network, keep_prob=0.5)
     # images_network = fully_connected(images_network, 1024, activation=NETWORK.activation)
     # if NETWORK.use_batchnorm_after_fully_connected_layers:
     #     images_network = batch_normalization(images_network)
-    # images_network = dropout(images_network, keep_prob=0.9)
+    # images_network = dropout(images_network, keep_prob=0.8)
     #
     # network = fully_connected(images_network, 1024, activation=NETWORK.activation, regularizer="L2")
-    network = fully_connected(images_network, NETWORK.output_size,regularizer="L2",weights_init='truncated_normal',activation='softmax')
+    network = fully_connected(images_network, NETWORK.output_size,weights_init="truncated_normal",regularizer="L2",activation='softmax')
 
     if optimizer == 'momentum':
         optimizer = Momentum(learning_rate=learning_rate, momentum=optimizer_param,
