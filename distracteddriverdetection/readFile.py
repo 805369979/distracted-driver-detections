@@ -73,15 +73,14 @@ for path in ['Train_data_list.csv','Test_data_list.csv']:
                 input_img = cv2.imread('/'.join(i.split('/')[1:]))
                 input_img = cv2.cvtColor(input_img, cv2.COLOR_BGR2GRAY)
                 image = cv2.resize(input_img, (224, 224))
-                image = image/255.0
                 # img_data_list_train.append(image)
                 img_data_list_test.append(image)
                 print(get_new_label(train_label[k], one_hot_encoding=ONE_HOT_ENCODING))
                 labels_list_test.append(get_new_label(train_label[k], one_hot_encoding=ONE_HOT_ENCODING))
 
                 if GET_HOG_FEATURES:
-                    features, hog_image = hog(image, orientations=9, pixels_per_cell=(10, 10),
-                                              cells_per_block=(1, 1), visualise=True)
+                    features, hog_image = hog(image, orientations=8, pixels_per_cell=(2, 2),
+                                              cells_per_block=(2, 2), visualise=True)
                     hog_features_test.append(features)
                 count+=1
                 break
